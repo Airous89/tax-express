@@ -90,5 +90,5 @@ const limiter = rateLimit({
   
   // Start server
   app.listen(process.env.PORT || 5000, () => {
-    console.log(`Server listening at http://localhost:${PORT}`)
+    console.log(`Server listening`)
   })
