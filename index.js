@@ -9,7 +9,7 @@ const { body, check } = require('express-validator')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const origin = {
-  origin: isProduction ? 'https://tax-client.now.sh/' : '*',
+  origin: isProduction ? 'https://tax-client.now.sh' : '*',
 }
 
 const app = express()
