@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const compression = require('compression')
 const rateLimit = require('express-rate-limit')
 const { body, check } = require('express-validator')
+const fileHandler = require("fs");
 
 const isProduction = process.env.NODE_ENV === 'production'
 const origin = {
