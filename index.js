@@ -42,7 +42,7 @@ const limiter = rateLimit({
   //show by ID
 
   const getSalariesById = (request, response) => {
-    const id = parseInt(request.params.id)
+    const id = parseInt(request.body.id)
   
     pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
       if (error) {
@@ -67,7 +67,7 @@ const limiter = rateLimit({
   
 
   const deleteSalaries = (request,response) => {
-    const id = parseInt(request.params.id)
+    const id = parseInt(request.body.id)
 
     pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
       if (error) {
