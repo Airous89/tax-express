@@ -14,7 +14,6 @@ const origin = {
 
 const app = express()
 
-app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors(origin))
 app.use(compression())
@@ -28,68 +27,72 @@ const limiter = rateLimit({
   
   app.use(limiter)
 
-  //show salary
-
-  const getSalaries = (request, response) => {
-    pool.query('SELECT * FROM salaries', (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json(results.rows)
-    })
-  }
-
-  //show by ID
-
-  const getSalariesById = (request, response) => {
-    const id = parseInt(request.body.id)
-  
-    pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).json(results.rows)
-    })
-  }
-
-// POST salaries
-  
-  const addSalaries = (request, response) => {
-    const { name, salary, monthlyTax } = request.body
-  
-    pool.query('INSERT INTO salaries (name, salary, monthlyTax) VALUES ($1, $2, $3)', [name, salary, monthlyTax], error => {
-      if (error) {
-        throw error
-      }
-      response.status(201).json({ status: 'success', message: 'salaries added.' })
-    })
-  }
-  
-
-  const deleteSalaries = (request,response) => {
-    const id = parseInt(request.body.id)
-
-    pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(200).send(`User deleted with ID: ${id}`)
-    })
-    console.log(id);
-  }
-
-
-  app
-    .route('/salaries')
-    // GET endpoint
-    .get(getSalaries)
-    .get(getSalariesById)
-    // POST endpoint
-    .post(addSalaries)
-    //DELETE endpoint
-    .delete(deleteSalaries)
-  
-  // Start server
-  app.listen(process.env.PORT || 5000, () => {
-    console.log(`Server listening`)
+app.use(
+  bodyParser.urlencoded({
+    extended: true
   })
+);
+app.use(bodyParser.json());
+
+app.use(express.json());
+const json = fileHandler.readFileSync("salaries.json");
+const salaries = JSON.parse(json);
+
+//show
+app.get("/salaries", (req, res) => {
+  fileHandler.readFile("salaries.json", (err, data) => {
+    if (err) res.send("File not found");
+    else res.send(data);
+  });
+});
+
+//show by ID
+app.get("/salaries/:id", (req, res) => {
+  const data = salaries.find(t => t.id === parseInt(req.params.id));
+  fileHandler.readFile("salaries.json", data, err => {
+    if (err) res.send("File not found");
+    else res.send(data);
+  });
+});
+
+//create
+app.post("/salaries", (req, res) => {
+  const item = {
+    id: salaries.length + 1,
+    name: req.body.name,
+    salary: req.body.salary,
+    monthlyTax: req.body.monthlyTax
+  };
+  salaries.push(item);
+  const data = JSON.stringify(salaries, null, 2);
+
+  fileHandler.writeFile("salaries.json", data, err => {
+    if (err) throw err;
+    res.send("File created");
+  });
+});
+
+//delete
+app.delete("/salaries", (req, res) => {
+  const item = salaries.find(t => t.id === parseInt(req.params.id));
+
+  const index = salaries.indexOf(item);
+  salaries.splice(index, 1);
+
+  const data = JSON.stringify(salaries, null, 2);
+
+  fileHandler.writeFile("salaries.json", data, err => {
+    if (err) throw err;
+    res.send("File created");
+  });
+});
+
+app.use(function(err, req, res, next) {
+  console.log(err.stack);
+  res.status(500).send("Something broke!");
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
