@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "11.x"
+    "node": "11.x",
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "node index.js",
@@ -21,10 +22,12 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
     "express-validator": "^6.2.0",
+    "file-system": "^2.2.2",
     "helmet": "^3.21.2",
     "pg": "^7.12.1"
   },
   "devDependencies": {
+    "mocha": "^6.2.2",
     "nodemon": "^1.19.4"
   }
 }
