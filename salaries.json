@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "name": "John",
+        "salary": "USD9875",
+        "monnthlyTax": "USD987.5" 
+    },
+    {
+        "id": 2,
+        "name": "Nate",
+        "salary": "USD47800",
+        "monthlyTax": "USD14969.5" 
+    },
+    {
+        "id": 3,
+        "name": "Lisa",
+        "salary": "USD90000",
+        "monnthlyTax": "USD35689.5"
+    }
+
+]
