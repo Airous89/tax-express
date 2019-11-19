@@ -51,6 +51,10 @@ const limiter = rateLimit({
       }
       response.status(200).json(results.rows)
     })
+    .catch((err) => {
+      console.log('We have this error', err)
+    })
+   
   }
 
 // POST salaries
